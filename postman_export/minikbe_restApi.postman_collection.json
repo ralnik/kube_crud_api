@@ -1,0 +1,153 @@
+{
+	"info": {
+		"_postman_id": "aa017037-d763-45e7-b341-f6692611a621",
+		"name": "minikbe_restApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "add_user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"johndoe589\",\r\n  \"firstname\": \"John\",\r\n  \"lastname\": \"Doe\",\r\n  \"email\": \"bestjohn@doe.com\",\r\n  \"phone\": \"+71002003040\"\r\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.101:30754/user",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"101"
+					],
+					"port": "30754",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.99.101:32242/users",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"101"
+					],
+					"port": "32242",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_user",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"BILL\",\r\n  \"firstname\": \"Julie\",\r\n  \"lastname\": \"Doe\",\r\n  \"email\": \"bestjohn@doe.com\",\r\n  \"phone\": \"+71004242424\"\r\n}"
+				},
+				"url": {
+					"raw": "http://192.168.99.101:32242/user/1",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"101"
+					],
+					"port": "32242",
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete_user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.99.101:32242/user/3",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"101"
+					],
+					"port": "32242",
+					"path": [
+						"user",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://192.168.99.101:32242/user/1",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"99",
+						"101"
+					],
+					"port": "32242",
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

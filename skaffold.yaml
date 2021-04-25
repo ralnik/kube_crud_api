@@ -1,0 +1,15 @@
+apiVersion: skaffold/v2alpha4
+kind: Config
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+  - image: my-app
+    context: my-app
+deploy:
+  helm:
+    releases:
+    - name: my-skaffold
+      chartPath: my-chart
+      values:
+        image: my-app

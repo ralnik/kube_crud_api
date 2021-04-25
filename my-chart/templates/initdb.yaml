@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Release.Name }}"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: check-db-ready
+          image: postgres:latest
+          env:
+            - name: POSTGRES_HOST
+              value: {{ .Values.externalPostgresql.postgresqlHost | quote }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.externalPostgresql.postgresqlPort | quote }}
+          command:
+            - sh
+            - "-c"
+            - |
+              until pg_isready -h $POSTGRES_HOST  -p  $POSTGRES_PORT;
+              do echo waiting for database; sleep 2; done;
+      containers:
+      - name: post-install-job
+        env:
+          - name: DATABASE_URI
+            value: {{ printf "postgresql://%s:%s@%s:%s/%s" .Values.externalPostgresql.postgresqlUsername .Values.externalPostgresql.postgresqlPassword .Values.externalPostgresql.postgresqlHost .Values.externalPostgresql.postgresqlPort .Values.externalPostgresql.postgresqlDatabase  | quote }}
+        image: postgres:latest
+        command:
+          - sh
+          - "-c"
+          - |
+            psql $DATABASE_URI <<'EOF'
+              CREATE SEQUENCE tab_seq INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1;
+              ALTER TABLE tab_seq OWNER TO postgres;
+              create table users (id bigint primary key DEFAULT nextval('tab_seq'::regclass), username varchar, firstname varchar, lastname varchar, email varchar, phone varchar);
+              insert into users (username, firstname, lastname, email, phone) values ('iivan', 'Ivanov1', 'ivan', 'iivan@gmail.com', '+79999112233');
+              insert into users (username, firstname, lastname, email, phone) values ('iivan', 'Ivanov2', 'ivan', 'iivan@gmail.com', '+79999112233');
+            EOF
+
+  backoffLimit: 0
