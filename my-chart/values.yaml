@@ -1,6 +1,6 @@
 replicaCount: 2
 
-image: my-app
+image: my-app:v1
 
 service:
   type: NodePort

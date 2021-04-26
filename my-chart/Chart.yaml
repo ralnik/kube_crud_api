@@ -6,11 +6,3 @@ type: application
 
 version: 0.3.0
 appVersion: 0.0.1
-
-dependencies:
-  - name: postgresql
-    version: 8.x.x
-    repository: https://charts.bitnami.com/bitnami
-    condition: postgresql.enabled
-    tags:
-      - myapp-database
